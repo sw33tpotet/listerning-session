@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Latihan Listening</title>
   <style>
     body {
@@ -22,8 +21,8 @@
       text-align: center;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
       color: white;
-      max-width: 600px;
       width: 90%;
+      max-width: 600px;
     }
 
     h2 {
@@ -37,50 +36,123 @@
     }
 
     .audio-block {
-      margin-bottom: 20px;
-    }
-
-    audio {
-      width: 100%;
-      border-radius: 30px;
+      margin-bottom: 30px;
     }
 
     .label {
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       display: block;
       color: #aee;
+    }
+
+    .custom-player {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border-radius: 30px;
+      padding: 10px 20px;
+    }
+
+    .custom-player button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .progress {
+      flex-grow: 1;
+      height: 5px;
+      background: #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #00cfff;
+      width: 0%;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>🎵 Latihan <strong style="color: #00cfff;">Listening</strong></h2>
-    <p>Tekan tombol putar untuk memulai audio.</p>
 
-    <div class="audio-block">
-  <span class="label">Audio 1</span>
-  <audio controls>
-    <source src="audio1.mp3" type="audio/mp3">
-    Browser Anda tidak mendukung pemutar audio.
-  </audio>
-    </div>
+<div class="container">
+  <h2>🎵 Latihan <strong style="color: #00cfff;">Listening</strong></h2>
+  <p>Tekan tombol putar untuk memulai audio.</p>
 
-    <div class="audio-block">
-      <span class="label">Audio 2</span>
-      <audio controls>
-        <source src="https://drive.google.com/uc?export=download&id=GANTI_ID_AUDIO_2" type="audio/mp3">
-        Browser Anda tidak mendukung pemutar audio.
-      </audio>
+  <!-- Audio 1 -->
+  <div class="audio-block">
+    <span class="label">Audio 1</span>
+    <div class="custom-player">
+      <button class="playPause">▶️</button>
+      <div class="progress"><div class="progress-bar"></div></div>
     </div>
-
-    <div class="audio-block">
-      <span class="label">Audio 3</span>
-      <audio controls>
-        <source src="https://drive.google.com/uc?export=download&id=GANTI_ID_AUDIO_3" type="audio/mp3">
-        Browser Anda tidak mendukung pemutar audio.
-      </audio>
-    </div>
+    <audio src="audio1.mp3"></audio>
   </div>
+
+  <!-- Audio 2 -->
+  <div class="audio-block">
+    <span class="label">Audio 2</span>
+    <div class="custom-player">
+      <button class="playPause">▶️</button>
+      <div class="progress"><div class="progress-bar"></div></div>
+    </div>
+    <audio src="audio/audio2.mp3"></audio>
+  </div>
+
+  <!-- Audio 3 -->
+  <div class="audio-block">
+    <span class="label">Audio 3</span>
+    <div class="custom-player">
+      <button class="playPause">▶️</button>
+      <div class="progress"><div class="progress-bar"></div></div>
+    </div>
+    <audio src="audio/audio3.mp3"></audio>
+  </div>
+</div>
+
+<script>
+  const blocks = document.querySelectorAll(".audio-block");
+
+  blocks.forEach(block => {
+    const audio = block.querySelector("audio");
+    const playBtn = block.querySelector(".playPause");
+    const progressBar = block.querySelector(".progress-bar");
+
+    playBtn.addEventListener("click", () => {
+      // Pause other audios
+      blocks.forEach(b => {
+        const otherAudio = b.querySelector("audio");
+        const otherBtn = b.querySelector(".playPause");
+        if (otherAudio !== audio) {
+          otherAudio.pause();
+          otherBtn.textContent = "▶️";
+        }
+      });
+
+      // Play/pause current
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = "⏸️";
+      } else {
+        audio.pause();
+        playBtn.textContent = "▶️";
+      }
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = percent + "%";
+    });
+
+    audio.addEventListener("ended", () => {
+      playBtn.textContent = "▶️";
+    });
+  });
+</script>
+
 </body>
 </html>
